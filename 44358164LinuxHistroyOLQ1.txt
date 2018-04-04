@@ -1,0 +1,23 @@
+  174  mkdir a/b/c
+  175  mkdir -p a/b/c
+  176  ls
+  177  cd a
+  178  ls
+  179  cd b
+  180  ls
+  181  head -1 wk04_student_data.txt | sed "s/\t/ ** /g"
+  182  cd $HOME
+  183  cd data
+  184  head -1 wk04_student_data.txt | sed "s/\t/ ** /g"
+  185  chmod +x gcr.sh
+  186  history | sed -n '120,130p'
+  187  chmod +x regurgitator.sh
+  188  ./regurgitator.sh
+  189  ./regurgitator.sh we are perfect
+  190  ./regurgitator.sh abc
+  191  ./regurgitator.sh a b v
+  192  ./regurgitator.sh a b c
+  193  nano fibonacci.sh
+  194  chmod +x fibonacci.sh
+  195  ./fibonacci.sh
+  196  history
