@@ -1,0 +1,96 @@
+Introduction to Bash Shell Scripting
+Once you really get to be at ease working on the command line, you’ll want to do more than what the previous chapters have taught you. You’ve already learned how to combine commands using piping, but if you really want to get the best out of your commands, there is much more you can do. In this chapter, you’ll get an introduction to the possibilities of Bash shell scripting, which really is the command line on steroids; piping and redirection just is not enough if you need to do really complex tasks. As soon as you really understand shell scripting, you’ll be able to automate many tasks, and thus do your work at least twice as fast as you used to do it.
+Basic Shell Script Components
+A shell script is a text file that contains a sequence of commands. So basically, anything that can run a bunch of commands can be considered a shell script. Nevertheless, some rules exist for making sure that you create decent shell scripts, scripts that will not only do the task you’ve written them for, but also be readable by others. At some point in time, you’ll be happy with the habit of writing readable shell scripts. As your scripts get longer and longer, you will notice that if a script does not meet the basic requirements of readability, even you yourself won’t be able to understand what it is doing.
+Elements of a Good Shell Script
+When writing a script, make sure that you meet the following requirements:
+• Give it a unique name.
+• Include the shebang (#!) to tell the shell which subshell should execute the script.
+• Include comments—lots of them.
+• Use the exit command to tell the shell that executes the script that the script has executed successfully.
+• Make your scripts executable.
+Let’s start with an example script (see Listing 14-1).
+   331
+Chapter 14 ■ IntroduCtIon to Bash shell sCrIptIng
+Listing 14-1. Make Sure Your Script Is Well Structured
+#!/bin/bash
+# this is the hello script
+# run it by typing ./hello in the directory where you've found it
+clear
+echo hello world
+exit 0
+Let’s talk about the name of the script first: you’ll be amazed how many commands already exist on your computer. So you have to make sure that the name of your script is unique. For instance, many people like to give the name test to their first script. Unfortunately, there’s already an existing command with that name (see the section “Using Control Structures” later in this chapter). If your script has the same name as an existing command, the existing command will be executed, not your script (unless you prefix the name of the script with ./). So make sure that the name of your script is not in use already. You can find out whether a name already exists by using the which command. For instance, if you want to use the name hello and want to be sure that it’s not in use already, type which hello. Listing 14-2 shows the result of this command.
+Listing 14-2. Use which to Find Out Whether the Name of Your Script Is Not Already in Use
+nuuk:~ # which hello
+which: no hello in
+(/sbin:/usr/sbin:/usr/local/sbin:/opt/gnome/sbin:/root/bin:/usr/local/bin:/usr/bin:/
+  usr/X11R6/bin:/bin
+:/usr/games:/opt/gnome/bin:/opt/kde3/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin)
+In the first line of the script is the shebang. This scripting element tells the shell from which this script
+is executed which subshell should be executed to run this script. This may sound rather cryptic, but is not too hard to understand. If you run a command from a shell, the command becomes the child process of the shell; the pstree command will show you that perfectly. If you run a script from the shell, the script becomes a child process of the shell. This means that it is by no means necessary to run the same shell as your current shell to run the script. To tell your current shell which subshell should be executed when running the script, include the shebang. As mentioned previously, the shebang always starts with #! and is followed by the name of the subshell that should execute the script. In Listing 14-1, I’ve used /bin/bash as the subshell, but you can use any other shell if you’d like.
+You will notice that not all scripts include a shebang, and in many cases, even if your script doesn’t include a shebang, it will still run. However, if a user who uses a shell other than /bin/bash tries to run a script without a shebang, it will probably fail. You can avoid this by always including a shebang.
+The second part of the example script in Listing 14-1 are two lines of comment. As you can guess, these command lines explain to the user what the purpose of the script is and how to use it. There’s only one rule about comment lines: they should be clear and explain what’s happening. A comment line always starts with a # followed by anything.
+■ Note You may ask why the shebang, which also starts with a #, is not interpreted as a comment. that is because of its position and the fact that it is immediately followed by an exclamation mark. this combination at the very start of a script tells the shell that it’s not a comment, but a shebang.
+Following the comment lines is the body of the script itself, which contains the code that the script should execute. In the example from Listing 14-1, the code consists of two simple commands: the first clears the screen, and the second echoes the text “hello world” to the screen.
+332
+  
+The last part of the script is the command exit 0. It is a good habit to use the exit command in all
+your scripts. This command exits the script and next tells the parent shell how the script has executed. If the parent shell reads exit 0, it knows the script executed successfully. If it encounters anything other than exit 0, it knows there was a problem. In more complex scripts, you could even start working with different exit codes; use exit 1 as a generic error message and exit 2 , and so forth, to specify that a specific condition was not met. When applying conditional loops later (see the section “Using Control Structures” later in this chapter), you’ll see that it may be very useful to work with exit codes.
+Executing the Script
+Now that your first shell script is written, it’s time to execute it. There are different ways of doing this:
+• Make it executable and run it as a program.
+• Run it as an argument of the bash command.
+• Source it.
+Making the Script Executable
+The most common way to run a shell script is by making it executable. To do this with the hello script from the example in Listing 14-1, you would use the following command:
+chmod +x hello
+After making the script executable, you can run it, just like any other normal command. The only limitation is the exact location in the directory structure where your script is. If it is in the search path,
+you can run it by typing just any command. If it is not in the search path, you have to run it from the exact directory where it is. This means that if linda created a script with the name hello that is in /home/linda, she has to run it using the command /home/linda/hello. Alternatively, if she is already in /home/linda, she could use ./hello to run the script. In the latter example, the dot and the slash tell the shell to run the command from the current directory.
+■ Tip not sure whether a directory is in the path or not? use echo $PATH to find out. If it’s not, you can add a directory to the path by redefining it. When defining it again, you’ll mention the new directory, followed by a call to the old path variable. For instance, to add the directory /something to the path, you would use PATH=$PATH:/something.
+Running the Script as an Argument of the bash Command
+The second option for running a script is to specify its name as the argument of the bash command. For instance, our example script hello would run by using the command bash hello. The advantage of running the script in this way is that there is no need to make it executable first. Make sure that you are using a complete reference to the location where the script is when running it this way; it has to be in the current directory, or you have to use a complete reference to the directory where it is. This means that if the script is /home/linda/hello, and your current directory is /tmp, you should run it using the following command:
+bash /home/linda/hello
+Chapter 14 ■ IntroduCtIon to Bash shell sCrIptIng
+  333
+
+Chapter 14 ■ IntroduCtIon to Bash shell sCrIptIng Sourcing the Script
+The third way of running the script is rather different. You can source the script. By sourcing a script, you
+don’t run it as a subshell, but you are including it in the current shell. This may be useful if the script contains variables that you want to be active in the current shell (this happens often in the scripts that are executed when you boot your computer). Some problems may occur as well. For instance, if you use the exit command in a script that is sourced, it closes the current shell. Remember, the exit command exits the current script. In fact, it doesn’t exit the script itself, but tells the executing shell that the script is over and it has to return to its parent shell. Therefore, you don’t want to source scripts that contain the exit command. There are two ways to source a script. The next two lines show how to source a script that has the name settings:
+. settings
+source settings
+It doesn’t really matter which one you use, as both are equivalent. When discussing variables in the next section, I’ll give you some more examples of why sourcing may be a very useful technique.
+Working with Variables and Input
+What makes a script so flexible is the use of variables. A variable is a value you get from somewhere that
+will be dynamic. The value of a variable normally depends on the circumstances. You can have your script get the variable itself, for instance, by executing a command, by making a calculation, by specifying it as a command-line argument for the script, or by modifying some text string. In this section, you’ll learn all there is to know about variables.
+Understanding Variables
+A variable is a value that you define somewhere and use in a flexible way later. You can do this in a script, but you don’t have to, as you can define a variable in the shell as well. To define a variable, you use varname=value. To get the value of a variable later on, you call its value by using the echo command. Listing 14-3 gives an example of how a variable is set on the command line and how its value is used in the next command.
+Listing 14-3. Setting and Using a Variable
+nuuk:~ # HAPPY=yes
+nuuk:~ # echo $HAPPY
+yes
+■ Note the method described here works for the Bash and dash shells. not every shell supports this method, however. For instance, on tcsh, you need to use the set command to define a variable: set happy=yes gives the value yes to the variable happy.
+Variables play a very important role on your computer. When booting, lots of variables are defined and used later when you work with your computer. For instance, the name of your computer is in a variable, the name of the user account you logged in with is in a variable, and the search path is in a variable as well. These are the shell variables, the so-called environment variables you get automatically when logging in to
+  334
+
+the shell. As discussed earlier, you can use the env command to get a complete list of all the variables that are set for your computer. You will notice that most environment variables are in uppercase. However, this is in no way a requirement; an environment variable can be in lowercase as well.
+The advantage of using variables in shell scripts is that you can use them in three ways:
+• As a single point of administration for a certain value
+• As a value that a user provides in some way
+• As a value that is calculated dynamically
+When reading some of the scripts that are used in your computer’s boot procedure, you will notice that the beginning of the script features a list of variables that are referred to several times later in the script. Let’s have a look at the somewhat silly example in Listing 14-4.
+Listing 14-4. Understanding the Use of Variables
+#!/bin/bash
+#
+# dirscript
+#
+# Silly script that creates a directory with a certain name
+# next sets $USER and $GROUP as the owners of the directory
+# and finally changes the permission mode to 770
+DIRECTORY=/blah
+USER=linda
+GROUP=sales
+mkdir $DIRECTORY
+chown $USER $DIRECTORY
+chgrp $GROUP $DIRECTORY
+chmod 770 $DIRECTORY
+exit 0
