@@ -1,0 +1,38 @@
+  583  grep -n "&#x2713" foo.html
+  584  sed -i '50,100{s/<th>/<th class="C">/g}' foo.html
+  585  grep -n "<th>" foo.html
+  586  grep -n "<th class="C">" foo.html
+  587  nano foo.html
+  588  grep -n "<th class="C">" foo.html
+  589  grep -n "&#x2713" foo.html
+  590  grep -n <th class="C"> foo.html
+  591  grep -n "<th>" foo.html
+  592  grep -n "<th" foo.html
+  593  grep -n "th" foo.html
+  594  grep -n "<th>" foo.html
+  595  nano foo.html
+  596  rm foo.html
+  597  nano foo.html
+  598  grep -n "<th>" foo.html
+  599  sed -i '50,100{s/<th>/<th class="C">/g}' foo.html
+  600  grep -n "<th>" foo.html
+  601  grep -n "<th" foo.html
+  602  cd data
+  603  rm foo.html
+  604  nano foo.html
+  605  grep -n "&#x2713" foo.html
+  606  grep -n "<th>" foo.html
+  607  sed -i '50,100{s/<th>/<th class="C">/g}' foo.html
+  608  grep -n "<th>" foo.html
+  609  grep -n "<th" foo.html
+  610  diff my_book_20180501.txt my_book_20180430.txt
+  611  sed -n '100,200p' my_book_20180501.txt
+  612  sed -n '90,95p' my_book_20180501.txt
+  615  sed -i.bak '90,95d' my_book_20180501.txt
+  616  diff my_book_20180501.txt my_book_20180501.txt.bak
+  617  mkdir new
+  618  chmod +x copy.sh
+  619  ./copy.sh current_list
+  620  cd new
+  621  ls
+  622  history
